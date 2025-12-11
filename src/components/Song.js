@@ -1,9 +1,11 @@
 import React from "react";
 
-const player = () => {
+const Song = () => {
     return (
-    <h1>Player</h1>
-    )
+      <div className="song">
+        <h1>Picture</h1>
+      </div>
+    );
 }
 
-export default player;
+export default Song;
