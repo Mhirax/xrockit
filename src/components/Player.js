@@ -4,7 +4,7 @@ const player = () => {
     return (
       <div className="player">
         <div className="time-control">
-          
+          <p>Start Time</p>
 </div>
       </div>
     );
