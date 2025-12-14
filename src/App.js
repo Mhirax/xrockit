@@ -1,6 +1,6 @@
 import React from "react"
 //Adding components 
-import player from './components/Player';
+import Player from './components/Player';
 import Song from './components/Song';
 
 function App() {
@@ -8,7 +8,6 @@ function App() {
     <div className="App">
       <Song />
       <Player />
-      
     </div>
   );
 }
