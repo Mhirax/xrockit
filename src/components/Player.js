@@ -3,7 +3,7 @@ import React from "react";
 const player = () => {
     return (
       <div className="player">
-        <div>
+        <div className="time-control">
           
 </div>
       </div>
