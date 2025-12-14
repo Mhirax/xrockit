@@ -1,4 +1,5 @@
 import React from "react"
+//Adding components 
 
 function App() {
   return (
