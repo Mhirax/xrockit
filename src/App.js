@@ -1,4 +1,6 @@
 import React from "react"
+//import styles
+
 //Adding components 
 import Player from './components/Player';
 import Song from './components/Song';
