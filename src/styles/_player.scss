@@ -10,4 +10,11 @@
     width: 50%;
     display: flex;
     background-color: lightcoral;
+    input {
+        width: 100%;
+        padding: 1rem 2rem;
+    }
+    p {
+        padding: 1rem;
+    }
 }
