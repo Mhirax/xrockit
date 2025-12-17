@@ -1,6 +1,6 @@
 import React from "react";
 
-const Song = () => {
+const Song = ({currentSong}) => {
   return (
     <div className="song-container">
       <h1>Picture</h1>
