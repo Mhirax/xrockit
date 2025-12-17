@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 //import styles
 import "./styles/app.scss"
 //Adding components 
@@ -8,6 +8,7 @@ import Song from './components/Song';
 import data from "./util";
 
 function App() {
+  const [songs, setSongs] = useState(data());
   return (
     <div className="App">
       <Song />
