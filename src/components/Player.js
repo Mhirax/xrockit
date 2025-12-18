@@ -8,6 +8,8 @@ import {
 
 
 const Player = ({ currentSong }) => {
+  //Ref
+  const audioRef = useRef(null)
   //Events Handler
   const playSongHandler = () => {
 
