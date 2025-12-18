@@ -7,7 +7,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 
-const Player = ({currentSong}) => {
+const Player = ({ currentSong }) => {
+  //Events Handler
+  const playSongHandler = () => {
+    
+  }
   return (
     <div className="player">
       <div className="time-control">
@@ -17,7 +21,7 @@ const Player = ({currentSong}) => {
       </div>
       <div className="play-control">
         <FontAwesomeIcon className="skip-back" size="2x" icon={faAngleLeft} />
-        <FontAwesomeIcon className="play" size="2x" icon={faPlay} />
+        <FontAwesomeIcon onClick={playSongHandler} className="play" size="2x" icon={faPlay} />
         <FontAwesomeIcon
           className="skip-forward"
           size="2x"
