@@ -7,13 +7,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 
-const Player = ({ currentSong }) => {
+const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
   //Ref
   const audioRef = useRef(null);
   //Events Handler
   const playSongHandler = () => {
     // console.log(audioRef.current);
-    audioRef.current.play();
+    // audioRef.current.play();
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(!isPlaying);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(!isPlaying);
+    }
   }
   return (
     <div className="player">
