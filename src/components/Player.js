@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faPlay,
@@ -10,7 +10,7 @@ import {
 const Player = ({ currentSong }) => {
   //Events Handler
   const playSongHandler = () => {
-    
+
   }
   return (
     <div className="player">
