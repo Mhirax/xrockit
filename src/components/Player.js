@@ -9,7 +9,7 @@ import {
 
 const Player = ({ currentSong }) => {
   //Ref
-  const audioRef = useRef(null)
+  const audioRef = useRef(null);
   //Events Handler
   const playSongHandler = () => {
 
@@ -30,7 +30,7 @@ const Player = ({ currentSong }) => {
           icon={faAngleRight}
         />
       </div>
-      <audio src={currentSong.audio}></audio>
+      <audio ref={audioRef} src={currentSong.audio}></audio>
     </div>
   );
 };
