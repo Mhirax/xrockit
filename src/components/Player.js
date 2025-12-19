@@ -32,6 +32,9 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     duration: null,
   });
   
+  const timeUpateHandler = () => {
+    
+  }
   return (
     <div className="player">
       <div className="time-control">
