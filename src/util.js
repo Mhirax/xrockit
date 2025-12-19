@@ -10,7 +10,6 @@ function chillhop() {
         audio:RX,
         id: uuidv4 (),
         active: true, 
-        color: [],
       },
     ];
 }
