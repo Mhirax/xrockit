@@ -15,6 +15,7 @@ function App() {
 
   return (
     <div className="App">
+      <h1 className="title">WAVEX ROCKITT</h1>
       <Song currentSong={currentSong} />
       <Player
         setIsPlaying={setIsPlaying}

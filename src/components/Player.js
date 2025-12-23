@@ -33,7 +33,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
   });
   
   const timeUpateHandler = () => {
-    
+
   }
   return (
     <div className="player">
@@ -51,7 +51,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           icon={faAngleRight}
         />
       </div>
-      <audio ref={audioRef} src={currentSong.audio}></audio>
+      <audio onTimeUpdate={timeUpateHandler} ref={audioRef} src={currentSong.audio}></audio>
     </div>
   );
 };
