@@ -1,10 +1,6 @@
 import React, {useRef, useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faPlay,
-  faAngleLeft,
-  faAngleRight,
-} from "@fortawesome/free-solid-svg-icons";
+import {faPlay,faAngleLeft,faAngleRight,} from "@fortawesome/free-solid-svg-icons";
 
 
 const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
@@ -27,8 +23,13 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
   const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
-    setSongInfo ({...songInfo, currentTime: current, duration })
-};
+    setSongInfo ({...songInfo, currentTime: current, duration }) //update our songinfo
+  };
+  const getTime = (time) => {
+    return (
+      Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
+    );
+  };
 
   //state
   const [songInfo, setSongInfo] = useState({
@@ -40,9 +41,9 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
   return (
     <div className="player">
       <div className="time-control">
-        <p>{songInfo.currentTime}</p>
+        <p>{getTime(songInfo.currentTime)}</p>
         <input type="range" />
-        <p>{songInfo.duration}</p>
+        <p>{getTime(songInfo.duration)}</p>
       </div>
       <div className="play-control">
         <FontAwesomeIcon className="skip-back" size="2x" icon={faAngleLeft} />
