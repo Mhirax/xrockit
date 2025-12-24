@@ -54,7 +54,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           icon={faAngleRight}
         />
       </div>
-      <audio onTimeUpdate={timeUpateHandler} ref={audioRef} src={currentSong.audio}></audio>
+      <audio onLoadedMetadata={timeUpateHandler} onTimeUpdate={timeUpateHandler} ref={audioRef} src={currentSong.audio}></audio>
     </div>
   );
 };
