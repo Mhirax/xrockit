@@ -14,9 +14,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
 
   //Events Handler
   const playSongHandler = () => {
-
-    // console.log(audioRef.current);
-    // audioRef.current.play();
+           
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(!isPlaying);
@@ -26,15 +24,18 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     } 
   }
 
+  const timeUpateHandler = (e) => {
+    const current = e.target.currentTime;
+    const duration = e.target.duration;
+};
+
   //state
   const [songInfo, setSongInfo] = useState({
     currentTime: null,
     duration: null,
   });
   
-  const timeUpateHandler = () => {
-
-  }
+  
   return (
     <div className="player">
       <div className="time-control">
