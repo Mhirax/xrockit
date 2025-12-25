@@ -35,7 +35,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
   };
 
   const dragHandler = (e) => {
-    console.log(e.target.value);
+    setSongInfo({ ...setSongInfo, currentTime: e.target.value })
   }
 
   //state
