@@ -1,9 +1,9 @@
 import React from "react";
 
-const Song = ({currentSong}) => {
+const LibrarySong = ({currentSong}) => {
   return (
-    <div className="song-container">
-      <img src={currentSong.cover} />
+    <div className="Librarys-ongs">
+      <img src={currentSong.cover}  />
       <h2>{currentSong.name}</h2>
       <h3>{currentSong.artiste}</h3>
     </div>
