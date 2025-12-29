@@ -4,7 +4,7 @@ import React from "react";
 
 const LibrarySong = ({ song, songs, setCurrentSong }) => {
   const songSelectHandler = () => {
-    const selectedSong = 
+    const selectedSong = songs.filter((state) => state.id === id);
   }
 
   return (
