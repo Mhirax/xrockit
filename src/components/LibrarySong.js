@@ -2,7 +2,7 @@ import React from "react";
 
 
 
-const LibrarySong = ({ song }) => {
+const LibrarySong = ({ song, songs, setCurrentSong }) => {
   const songSelectHandler = () => {
     const selectedSong = 
   }
