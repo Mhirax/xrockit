@@ -5,7 +5,7 @@ import { faMusic } from "@fortawesome/free-solid-svg-icons";
 const Nav = () => {
     return (
         <nav>
-            <h1>Waves</h1>
+            <h1>Waves ROCKITT</h1>
             <button>Library <FontAwesomeIcon icon={faMusic} /></button>
         </nav>
     )
