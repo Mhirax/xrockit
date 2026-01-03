@@ -16,8 +16,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     duration: 0,
   });
 
-  //Ref
-  const audioRef = useRef(null);
+
 
   //Events Handler
   const playSongHandler = () => {
