@@ -7,17 +7,8 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
+const Player = ({ audioRef, currentSong, isPlaying, setIsPlaying }) => {
   
-
-  //state
-  const [songInfo, setSongInfo] = useState({
-    currentTime: 0,
-    duration: 0,
-  });
-
-
-
   //Events Handler
   const playSongHandler = () => {
     if (isPlaying) {
@@ -29,11 +20,6 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     }
   };
 
-  const timeUpateHandler = (e) => {
-    const current = e.target.currentTime;
-    const duration = e.target.duration;
-    setSongInfo({ ...songInfo, currentTime: current, duration : duration }); //update our songinfo
-  };
   const getTime = (time) => {
     return (
       Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
