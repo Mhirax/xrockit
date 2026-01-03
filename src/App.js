@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react"
 //import styles
 import "./styles/app.scss"
 //Adding components 
+import Nav from "./components/Nav";
 import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
@@ -33,6 +34,7 @@ function App() {
   return (
     <div className="App">
       <h2 className="head">WAVE-X SOUND ROCKITT</h2>
+      <Nav />
 
       <Song currentSong={currentSong} />
 
