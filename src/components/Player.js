@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -72,12 +72,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           icon={faAngleRight}
         />
       </div>
-      <audio
-        onLoadedMetadata={timeUpateHandler}
-        onTimeUpdate={timeUpateHandler}
-        ref={audioRef}
-        src={currentSong.audio}
-      ></audio>
+     
     </div>
   );
 };
