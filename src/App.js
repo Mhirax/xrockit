@@ -17,6 +17,17 @@ function App() {
   const [songs, setSongs] = useState(data());
   const [currentSong, setCurrentSong] = useState(songs[5])
   const [isPlaying, setIsPlaying] = useState(false);
+    //state
+    const [songInfo, setSongInfo] = useState({
+      currentTime: 0,
+      duration: 0,
+    });
+  
+  const timeUpateHandler = (e) => {
+    const current = e.target.currentTime;
+    const duration = e.target.duration;
+    setSongInfo({ ...songInfo, currentTime: current, duration: duration }); //update our songinfo
+  };
 
 
   return (
@@ -30,6 +41,8 @@ function App() {
         audioRef = {audioRef}
         isPlaying={isPlaying}
         currentSong={currentSong}
+        setSongInfo={setSongInfo}
+        songInfo={songInfo}
       />
 
       <Library
