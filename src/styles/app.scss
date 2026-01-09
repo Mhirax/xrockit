@@ -11,7 +11,8 @@
 
 body{
      font-family: "Lato", sans-serif;
-     background-color: rgba(235, 233, 231, 0.912);
+     background-color: rgb(103, 19, 19);
+     color:white ;
 }
 
 .head {
@@ -21,16 +22,16 @@ body{
 
 h3,h4 {
     font-weight: 400;
-    color: rgb(100,100, 100);
+    color: rgb(242, 236, 236);
 }
 
 h1,
 h2,
 h3 {
-   color: rgb(76, 75, 75)
+   color: rgb(242, 236, 236)
 }
 
-@import "./song";
-@import "./player";
-@import "./library"
-@import "./nav.scss"
+@import "./song.scss";
+@import "./player.scss";
+@import "./library";
+@import "./nav.scss";

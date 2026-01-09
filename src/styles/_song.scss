@@ -1,12 +1,14 @@
 .song-container  { 
 min-height: 30vh; 
 display: flex;
+color: aliceblue;
 flex-direction: column; 
 align-items: center; 
 justify-content: center;
 img {
     width: 20%;
-    border-radius: 50%;
+    border-radius: 80%;
+    height: 40%;
 }
 h2{
     padding: 3rem 1rem 1rem 1rem;
