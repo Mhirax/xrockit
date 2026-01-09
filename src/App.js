@@ -6,7 +6,7 @@ import Nav from "./components/Nav";
 import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
-import data from "./util";
+import data from "./data";
 
 
 
@@ -16,35 +16,38 @@ function App() {
 
   // state function
   const [songs, setSongs] = useState(data());
-  const [currentSong, setCurrentSong] = useState(songs[5])
+  const [currentSong, setCurrentSong] = useState(songs[0])
   const [isPlaying, setIsPlaying] = useState(false);
-    //state
-    const [songInfo, setSongInfo] = useState({
+  const [songInfo, setSongInfo] = useState({
       currentTime: 0,
       duration: 0,
-    });
-  
+  });
+
+  const [libraryStatus, setLibraryStatus] = useState(false);
+
+  //Event
   const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
     setSongInfo({ ...songInfo, currentTime: current, duration: duration }); //update our songinfo
   };
 
-
+  
   return (
-    <div className="App">
-      <h2 className="head">WAVE-X SOUND ROCKITT</h2>
-      <Nav />
-
+    <div className="App">    
+      <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
       <Song currentSong={currentSong} />
 
       <Player
         setIsPlaying={setIsPlaying}
-        audioRef = {audioRef}
+        audioRef={audioRef}
         isPlaying={isPlaying}
         currentSong={currentSong}
         setSongInfo={setSongInfo}
         songInfo={songInfo}
+        songs={songs}
+        setCurrentSong={setCurrentSong}
+        setSongs={setSongs}
       />
 
       <Library
@@ -54,13 +57,14 @@ function App() {
         Song={Song}
         isPlaying={isPlaying}
         setSongs={setSongs}
+        libraryStatus={libraryStatus}
       />
 
       <audio
         onLoadedMetadata={timeUpateHandler}
         onTimeUpdate={timeUpateHandler}
         ref={audioRef}
-        src={currentSong.audio}
+        src={currentSong?.audio}
       ></audio>
     </div>
   );
