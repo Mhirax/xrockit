@@ -4,14 +4,15 @@ import {faPlay,faAngleLeft, faAngleRight,faPause,} from "@fortawesome/free-solid
  
 
 
-const Player = ({ audioRef, currentSong, isPlaying, setIsPlaying, setSongInfo, songInfo, songs,
+const Player = ({ audioRef,
+  currentSong, isPlaying,
+  setIsPlaying, setSongInfo, songInfo, songs,
   setSongs, setCurrentSong, }) => {
   
-  //useEffect 
+  //USEEFFECT FUNCTION 
   useEffect(() => {
-
     //Add active state
-    const newSongs = songs.map((song) => {
+  const newSongs = songs.map((song) => {
       if (song.id === currentSong.id) {
         return {
           ...song,
@@ -24,7 +25,6 @@ const Player = ({ audioRef, currentSong, isPlaying, setIsPlaying, setSongInfo, s
         };
       }
     });
-
     setSongs(newSongs);
   }, [currentSong, songs, setSongs]);
 
@@ -46,21 +46,21 @@ const Player = ({ audioRef, currentSong, isPlaying, setIsPlaying, setSongInfo, s
       );
     };
 
-    const dragHandler = (e) => {
+  const dragHandler = (e) => {
       audioRef.current.currentTime = e.target.value;
       setSongInfo({ ...songInfo, currentTime: e.target.value })
     }
   
-    const skipTrackHandler = async (direction) => {
-      let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-      if (direction === 'skip-forward') {
+  const skipTrackHandler = async (direction) => {
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+     if (direction === 'skip-forward') {
        await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
-      }
-      if (direction === "skip-back") {
-        if ((currentIndex - 1) % songs.length === -1) {
-          await setCurrentSong(songs[songs.length - 1]);
-          if (isPlaying) audioRef.current.play();
-          return;
+         }
+       if (direction === "skip-back") {
+          if ((currentIndex - 1) % songs.length === -1) {
+             await setCurrentSong(songs[songs.length - 1]);
+            if (isPlaying) audioRef.current.play();
+     return;
         }
         await setCurrentSong(songs[(currentIndex - 1) % songs.length]);
       }

@@ -21,3 +21,11 @@ button {
 .header {
     margin-left: 6rem;
 }
+
+@media screen and (max-width:768px) {
+    nav {
+        button{
+            z-index: 10;
+        }
+    }
+}
