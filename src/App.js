@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 //import styles
 import "./styles/app.scss"
 //Adding components 
@@ -11,21 +11,40 @@ import data from "./data";
 
 
 function App() {
-    //Ref to play audio
-    const audioRef = useRef(null);
+  //Ref to play audio
+  const audioRef = useRef(null);
 
   // state function
   const [songs, setSongs] = useState(data());
-  const [currentSong, setCurrentSong] = useState(songs[0])
+  const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo, setSongInfo] = useState({
-      currentTime: 0,
-      duration: 0,
+    currentTime: 0,
+    duration: 0,
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
 
+  
+  // USEEFFECTS
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.log("Autoplay blocked:", err);
+          setIsPlaying(false);
+        });
+      }
+    } else {
+      audio.pause();
+    }
+  }, [isPlaying, currentSong]); 
 
   //Event Handlers
+
   const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
@@ -34,40 +53,36 @@ function App() {
 
   //AUTOSKIP TO NEXT TRACK
   const songEndHandler = () => {
-  const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-  const nextSong = songs[(currentIndex + 1) % songs.length];
-  setCurrentSong(nextSong);
+    const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    const nextSong = songs[(currentIndex + 1) % songs.length];
+    setCurrentSong(nextSong);
 
-  if (isPlaying) {
-    setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.play().catch((err) => {
-          console.warn("Autoplay blocked:", err);
-        });
-      }
-    }, 50); // 50ms is usually enough
-  }
+    if (isPlaying) {
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play().catch((err) => {
+            console.warn("Autoplay blocked:", err);
+          });
+        }
+      }, 50); // 50ms is usually enough
+    }
   };
 
-  
   return (
-
     <div className={`App ${libraryStatus ? "library-active" : ""}`}>
-      
-      <Nav libraryStatus={libraryStatus}
-        setLibraryStatus={setLibraryStatus}/>
-      
-      <Song currentSong={currentSong}/>
+      <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
+
+      <Song currentSong={currentSong} />
 
       <Player
         setIsPlaying={setIsPlaying}
-        audioRef={audioRef}
         isPlaying={isPlaying}
         currentSong={currentSong}
         setSongInfo={setSongInfo}
         songInfo={songInfo}
         songs={songs}
         setCurrentSong={setCurrentSong}
+        audioRef={audioRef}
         setSongs={setSongs}
       />
 

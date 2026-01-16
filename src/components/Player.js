@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlay,faAngleLeft, faAngleRight,faPause,} from "@fortawesome/free-solid-svg-icons";
  
@@ -9,66 +9,66 @@ const Player = ({ audioRef,
   setIsPlaying, setSongInfo, songInfo, songs,
   setSongs, setCurrentSong, }) => {
   
-  //USEEFFECT FUNCTION 
-  useEffect(() => {
-    //Add active state
-  const newSongs = songs.map((song) => {
-      if (song.id === currentSong.id) {
-        return {
-          ...song,
-          active: true,
-        };
-      } else {
-        return {
-          ...song,
-          active: false,
-        };
-      }
-    });
-    setSongs(newSongs);
-  }, [currentSong, songs, setSongs]);
-
+ 
+  
+  
+  
+ const activeLibraryHandler = (nextSong) => {
+   const newSongs = songs.map((song) => {
+     if (song.id === nextSong.id) {
+       return {
+         ...song,
+         active: true,
+       };
+     } else {
+       return {
+         ...song,
+         active: false,
+       };
+     }
+   });
+   setSongs(newSongs);
+   console.log("Activated song:", nextSong.name);
+ };
 
   //Events Handler
   const playSongHandler = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(!isPlaying);
-    } else {
-      audioRef.current.play();
-      setIsPlaying(!isPlaying);
-    }
+    setIsPlaying(!isPlaying); // ONLY toggle state — no .play() or .pause()
   };
 
   const getTime = (time) => {
       return (
         Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
       );
-    };
-
-  const dragHandler = (e) => {
-      audioRef.current.currentTime = e.target.value;
-      setSongInfo({ ...songInfo, currentTime: e.target.value })
-    }
+  };
   
-  const skipTrackHandler = async (direction) => {
-    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-     if (direction === 'skip-forward') {
-       await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
-         }
-       if (direction === "skip-back") {
-          if ((currentIndex - 1) % songs.length === -1) {
-             await setCurrentSong(songs[songs.length - 1]);
-            if (isPlaying) audioRef.current.play();
-     return;
-        }
-        await setCurrentSong(songs[(currentIndex - 1) % songs.length]);
-      }
-  if (isPlaying) audioRef.current.play();
-    };
+const dragHandler = (e) => {
+  const audio = audioRef.current;
+  if (!audio) return; // 👈 THIS IS THE FIX!
+
+  audio.currentTime = e.target.value;
+  setSongInfo({ ...songInfo, currentTime: e.target.value });
+};
   
+const skipTrackHandler = (direction) => {
+  if (!currentSong || !songs.length) return;
 
+  let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+  if (currentIndex === -1) return;
 
+  let nextIndex;
+  if (direction === 'skip-forward') {
+    nextIndex = (currentIndex + 1) % songs.length;
+  } else {
+    nextIndex = (currentIndex - 1 + songs.length) % songs.length;
+  }
+
+  const nextSong = songs[nextIndex];
+  setCurrentSong(nextSong);
+  activeLibraryHandler(nextSong);
+  // Do NOT call .play() here — App.js handles it!
+};
+  
     return (
       <div className="player">
         <div className="time-control">
@@ -104,7 +104,10 @@ const Player = ({ audioRef,
         </div>
       </div>
     );
-  };
+};
+
+
+  
 
 
   export default Player;
