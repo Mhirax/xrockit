@@ -1,113 +1,115 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPlay,faAngleLeft, faAngleRight,faPause,} from "@fortawesome/free-solid-svg-icons";
- 
+import {
+  faPlay,
+  faAngleLeft,
+  faAngleRight,
+  faPause,
+} from "@fortawesome/free-solid-svg-icons";
 
+const Player = ({
+  audioRef,
+  currentSong,
+  isPlaying,
+  setIsPlaying,
+  setSongInfo,
+  songInfo,
+  songs,
+  setSongs,
+  setCurrentSong,
+}) => {
+  //EVENT HANDLER
+  const activeLibraryHandler = (nextSong) => {
+    const newSongs = songs.map((song) => {
+      if (song.id === nextSong.id) {
+        return {
+          ...song,
+          active: true,
+        };
+      } else {
+        return {
+          ...song,
+          active: false,
+        };
+      }
+    });
+    setSongs(newSongs);
+    console.log("Activated song:", nextSong.name);
+  };
 
-const Player = ({ audioRef,
-  currentSong, isPlaying,
-  setIsPlaying, setSongInfo, songInfo, songs,
-  setSongs, setCurrentSong, }) => {
-  
- 
-  
-  
-  
- const activeLibraryHandler = (nextSong) => {
-   const newSongs = songs.map((song) => {
-     if (song.id === nextSong.id) {
-       return {
-         ...song,
-         active: true,
-       };
-     } else {
-       return {
-         ...song,
-         active: false,
-       };
-     }
-   });
-   setSongs(newSongs);
-   console.log("Activated song:", nextSong.name);
- };
-
-  //Events Handler
+  //EVENT HANDLERS
   const playSongHandler = () => {
     setIsPlaying(!isPlaying); // ONLY toggle state — no .play() or .pause()
   };
 
   const getTime = (time) => {
-      return (
-        Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
-      );
-  };
-  
-const dragHandler = (e) => {
-  const audio = audioRef.current;
-  if (!audio) return; // 👈 THIS IS THE FIX!
-
-  audio.currentTime = e.target.value;
-  setSongInfo({ ...songInfo, currentTime: e.target.value });
-};
-  
-const skipTrackHandler = (direction) => {
-  if (!currentSong || !songs.length) return;
-
-  let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-  if (currentIndex === -1) return;
-
-  let nextIndex;
-  if (direction === 'skip-forward') {
-    nextIndex = (currentIndex + 1) % songs.length;
-  } else {
-    nextIndex = (currentIndex - 1 + songs.length) % songs.length;
-  }
-
-  const nextSong = songs[nextIndex];
-  setCurrentSong(nextSong);
-  activeLibraryHandler(nextSong);
-  // Do NOT call .play() here — App.js handles it!
-};
-  
     return (
-      <div className="player">
-        <div className="time-control">
-          <p>{getTime(songInfo.currentTime)}</p>
-          <input
-            min={0}
-            max={songInfo.duration || 0}
-            value={songInfo.currentTime}
-            onChange={dragHandler}
-            type="range"
-          />
-          <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
-        </div>
-        <div className="play-control">
-          <FontAwesomeIcon
-            onClick={() => skipTrackHandler("skip-back")}
-            className="skip-back"
-            size="2x"
-            icon={faAngleLeft}
-          />
-          <FontAwesomeIcon
-            onClick={playSongHandler}
-            className="play"
-            size="2x"
-            icon={isPlaying ? faPause : faPlay}
-          />
-          <FontAwesomeIcon
-            onClick={() => skipTrackHandler("skip-forward")}
-            className="skip-forward"
-            size="2x"
-            icon={faAngleRight}
-          />
-        </div>
-      </div>
+      Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
     );
+  };
+
+  const dragHandler = (e) => {
+    const audio = audioRef.current;
+    if (!audio) return; // 👈 THIS IS THE FIX!
+
+    audio.currentTime = e.target.value;
+    setSongInfo({ ...songInfo, currentTime: e.target.value });
+  };
+
+  const skipTrackHandler = (direction) => {
+    if (!currentSong || !songs.length) return;
+
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    if (currentIndex === -1) return;
+
+    let nextIndex;
+    if (direction === "skip-forward") {
+      nextIndex = (currentIndex + 1) % songs.length;
+    } else {
+      nextIndex = (currentIndex - 1 + songs.length) % songs.length;
+    }
+
+    const nextSong = songs[nextIndex];
+    setCurrentSong(nextSong);
+    activeLibraryHandler(nextSong);
+    // Do NOT call .play() here — App.js handles it!
+  };
+
+  return (
+    <div className="player">
+      <div className="time-control">
+        <p>{getTime(songInfo.currentTime)}</p>
+        <input
+          min={0}
+          max={songInfo.duration || 0}
+          value={songInfo.currentTime}
+          onChange={dragHandler}
+          type="range"
+        />
+        <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
+      </div>
+      <div className="play-control">
+        <FontAwesomeIcon
+          onClick={() => skipTrackHandler("skip-back")}
+          className="skip-back"
+          size="2x"
+          icon={faAngleLeft}
+        />
+        <FontAwesomeIcon
+          onClick={playSongHandler}
+          className="play"
+          size="2x"
+          icon={isPlaying ? faPause : faPlay}
+        />
+        <FontAwesomeIcon
+          onClick={() => skipTrackHandler("skip-forward")}
+          className="skip-forward"
+          size="2x"
+          icon={faAngleRight}
+        />
+      </div>
+    </div>
+  );
 };
 
-
-  
-
-
-  export default Player;
+export default Player;

@@ -4,7 +4,9 @@ import React from "react";
 
 const LibrarySong = ({ song, songs, setCurrentSong, id,
   audioRef, isPlaying, setSongs }) =>
+
 {
+  //EVENT HANDLER
   const songSelectHandler = async () => {
     const selectedSong = songs.filter((state) => state.id === id);
     await setCurrentSong(selectedSong[0]);
