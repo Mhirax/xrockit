@@ -25,7 +25,7 @@ function App() {
   const [libraryStatus, setLibraryStatus] = useState(false);
 
   
-  // USEEFFECTS
+  // USEEFFECT function
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -43,8 +43,9 @@ function App() {
     }
   }, [isPlaying, currentSong]); 
 
-  //Event Handlers
 
+  //Event Handlers
+  //TIMEUPDATE
   const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;

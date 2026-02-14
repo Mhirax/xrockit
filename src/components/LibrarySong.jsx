@@ -27,10 +27,11 @@ const LibrarySong = ({ song, songs, setCurrentSong, id,
     });
     console.log("select song")
     setSongs(newSongs);
-    //check if song is playing
- if (isPlaying) audioRef.current.play();
 
+ //check if song is playing
+ if (isPlaying) audioRef.current.play();
   };
+
   return (
     <div onClick={songSelectHandler} className={`library-song  ${song.active ? 'selected': "" }`}>
       <img alt={song.name} src={song.cover}></img>  

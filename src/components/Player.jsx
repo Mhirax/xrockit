@@ -18,6 +18,7 @@ const Player = ({
   setSongs,
   setCurrentSong,
 }) => {
+
   //EVENT HANDLER
   const activeLibraryHandler = (nextSong) => {
     const newSongs = songs.map((song) => {
@@ -37,11 +38,12 @@ const Player = ({
     console.log("Activated song:", nextSong.name);
   };
 
-  //EVENT HANDLERS
+  //EVENT HANDLER
   const playSongHandler = () => {
     setIsPlaying(!isPlaying); // ONLY toggle state — no .play() or .pause()
   };
 
+  //FORMAT TIME FUNCTION
   const getTime = (time) => {
     return (
       Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
