@@ -44,8 +44,7 @@ function App() {
   }, [isPlaying, currentSong]); 
 
 
-  //Event Handlers
-  //TIMEUPDATE
+  //timeupdate function
   const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
