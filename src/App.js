@@ -28,26 +28,23 @@ function App() {
   
   // useEffects is a react hook that runs code after the components is rendered on screen
   useEffect(() => {
-//audioRef is a ref object
-//current holds the real <audio> DOM element
-//We store it in a variable called audio
-    const audio = useRef.current
-  //safety check saying "if it is not audio or if it is null or undefined stop running the code"
+    const audio = useRef.current;
     if (!audio) return;
 
+    // This function checks our React state 
+    //which says if "is playing" is "true" try to play audio and if it is "false" pause the audio
     if (isPlaying) {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
+      const playpromise = audio.play();
+      if (playpromise !== undefined) {
+        playpromise.catch((err) => {
           console.log("Autoplay blocked:", err);
           setIsPlaying(false);
         });
       }
-    } else {
-      audio.pause();
-    }
-  },[isPlaying, currentSong]); 
-
+      } else {
+        audio.pause();
+      }
+    }, [currentSong, isPlaying]);
 
   //timeupdate function
   const timeUpateHandler = (e) => {
