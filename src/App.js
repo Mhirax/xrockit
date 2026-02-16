@@ -28,7 +28,11 @@ function App() {
   
   // useEffects is a react hook that runs code after the components is rendered on screen
   useEffect(() => {
-    const audio = audioRef.current;
+//audioRef is a ref object
+//current holds the real <audio> DOM element
+//We store it in a variable called audio
+    const audio = useRef.current
+  //safety check saying "if it is not audio or if it is null or undefined stop running the code"
     if (!audio) return;
 
     if (isPlaying) {
@@ -42,11 +46,7 @@ function App() {
     } else {
       audio.pause();
     }
-  },
-    //this effects runs whenever "is playing" and "currentsong" changes 
-    //if you remove this dependancy array the effects will run on very
-    //every render (bad performance)
-    [isPlaying, currentSong]); 
+  },[isPlaying, currentSong]); 
 
 
   //timeupdate function
