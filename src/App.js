@@ -26,7 +26,7 @@ function App() {
   const [libraryStatus, setLibraryStatus] = useState(false);
 
   
-  // USEEFFECT function
+  // useEffects is a react hook that runs code after the components is rendered on screen
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
