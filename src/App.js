@@ -11,8 +11,9 @@ import data from "./data";
 // working on my app rendering all components
 
 function App() {
-  //Ref to play audio
+  //useRef is a react Hook or reference to store or access to DOM elements
   const audioRef = useRef(null);
+
 
   // state function
   const [songs, setSongs] = useState(data());
