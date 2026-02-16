@@ -42,7 +42,11 @@ function App() {
     } else {
       audio.pause();
     }
-  }, [isPlaying, currentSong]); 
+  },
+    //this effects runs whenever "is playing" and "currentsong" changes 
+    //if you remove this dependancy array the effects will run on very
+    //every render (bad performance)
+    [isPlaying, currentSong]); 
 
 
   //timeupdate function
