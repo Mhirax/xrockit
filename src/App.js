@@ -47,6 +47,7 @@ function App() {
   //timeupdate function
   const timeUpateHandler = () => {
     const current = e.target.currentTime;
+    const duration = e.target.duration;
 }
 
   //AUTOSKIP TO NEXT TRACK
