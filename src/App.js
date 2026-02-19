@@ -47,8 +47,10 @@ function App() {
     }, [currentSong, isPlaying]);
 
 
-  //TIME UPDATE FUNCTION 
-  It runs whenever the audio time updates
+  // what does e stand for?
+  //the Event 
+  //When the audio is playing, the browser automatically sends an event object to this function.
+  
 
   //AUTOSKIP TO NEXT TRACK
   const songEndHandler = () => {
