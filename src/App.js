@@ -14,10 +14,9 @@ function App() {
   //useRef is a react Hook or reference to store or access to DOM elements
   const audioRef = useRef(null);
 
-
   // state function
   const [songs, setSongs] = useState(data());
-  const [currentSong, setCurrentSong] = useState(songs[0]);
+  const [currentSong, setCurrentSong] = useState(songs[2]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
@@ -25,13 +24,12 @@ function App() {
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
 
-  
   // useEffects is a react hook that runs code after the components is rendered on screen
   useEffect(() => {
     const audio = useRef.current;
     if (!audio) return;
 
-    // This function checks our React state 
+    // This function checks our React state
     //which says if "is playing" is "true" try to play audio and if it is "false" pause the audio
     if (isPlaying) {
       const playpromise = audio.play();
@@ -41,16 +39,15 @@ function App() {
           setIsPlaying(false);
         });
       }
-      } else {
-        audio.pause();
-      }
-    }, [currentSong, isPlaying]);
+    } else {
+      audio.pause();
+    }
+  }, [currentSong, isPlaying]);
 
-
-  // what does e stand for?
-  //the Event 
-  //When the audio is playing, the browser automatically sends an event object to this function.
-  
+  //timeupdate function
+  const timeUpateHandler = () => {
+    const current = e.target.currentTime;
+}
 
   //AUTOSKIP TO NEXT TRACK
   const songEndHandler = () => {
