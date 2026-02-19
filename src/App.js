@@ -46,12 +46,9 @@ function App() {
       }
     }, [currentSong, isPlaying]);
 
-  //timeupdate function
-  const timeUpateHandler = (e) => {
-    const current = e.target.currentTime;
-    const duration = e.target.duration;
-    setSongInfo({ ...songInfo, currentTime: current, duration: duration }); //update our songinfo
-  };
+
+  //TIME UPDATE FUNCTION 
+  It runs whenever the audio time updates
 
   //AUTOSKIP TO NEXT TRACK
   const songEndHandler = () => {
