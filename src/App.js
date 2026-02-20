@@ -16,7 +16,7 @@ function App() {
 
   // state function
   const [songs, setSongs] = useState(data());
-  const [currentSong, setCurrentSong] = useState(songs[2]);
+  const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
@@ -26,7 +26,7 @@ function App() {
 
   // useEffects is a react hook that runs code after the components is rendered on screen
   useEffect(() => {
-    const audio = useRef.current;
+    const audio = audioRef.current;
     if (!audio) return;
 
     // This function checks our React state
@@ -45,9 +45,10 @@ function App() {
   }, [currentSong, isPlaying]);
 
   //timeupdate function
-  const timeUpateHandler = () => {
+  const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
+    setSongInfo({ ...songInfo, currentTime: current, duration: duration });
 }
 
   //AUTOSKIP TO NEXT TRACK
