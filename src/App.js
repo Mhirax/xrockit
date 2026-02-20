@@ -48,7 +48,8 @@ function App() {
   const timeUpateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
-    setSongInfo({ ...songInfo, currentTime: current, duration: duration });
+    //update react state to update song time info
+   setSongInfo({ currentTime:current, duration:duration})
 }
 
   //AUTOSKIP TO NEXT TRACK
