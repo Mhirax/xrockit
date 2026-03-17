@@ -1,20 +1,18 @@
-import React, { useRef, useState, useEffect } from "react"
-//import styles
-import "./styles/app.scss"
-//Adding components 
+// src/App.js
+// 🔧 MODIFY THIS FILE - Add the new state and functions
+
+import React, { useRef, useState, useEffect } from "react";
+import "./styles/app.scss";
 import Nav from "./components/Nav";
 import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
 import data from "./data";
 
-// working on my app rendering all components
-
 function App() {
-  //useRef is a react Hook or reference to store or access to DOM elements
   const audioRef = useRef(null);
 
-  // state function
+  // ===== EXISTING STATE (keep all of this) =====
   const [songs, setSongs] = useState(data());
   const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -24,13 +22,15 @@ function App() {
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
 
-  // useEffects is a react hook that runs code after the components is rendered on screen
+  // ===== NEW STATE FOR SHUFFLE & REPEAT =====
+  const [shuffle, setShuffle] = useState(false); // true or false
+  const [repeat, setRepeat] = useState("off"); // 'off', 'one', 'all'
+
+  // ===== EXISTING useEffect (keep as is) =====
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // This function checks our React state
-    //which says if "is playing" is "true" try to play audio and if it is "false" pause the audio
     if (isPlaying) {
       const playpromise = audio.play();
       if (playpromise !== undefined) {
@@ -44,28 +44,118 @@ function App() {
     }
   }, [currentSong, isPlaying]);
 
-  //timeupdate function
-  const timeUpateHandler = (e) => {
+  // ===== EXISTING timeUpdateHandler (keep as is) =====
+  const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
-    //update react state to update song time info
-   setSongInfo({ currentTime:current, duration:duration})
-}
+    setSongInfo({ ...songInfo, currentTime: current, duration: duration });
+  };
 
-  //AUTOSKIP TO NEXT TRACK
-  const songEndHandler = () => {
+  // ===== NEW: Helper function to update active songs =====
+  const updateActiveSongs = (selectedSong) => {
+    const newSongs = songs.map((song) => ({
+      ...song,
+      active: song.id === selectedSong.id,
+    }));
+    setSongs(newSongs);
+  };
+
+  // ===== NEW: Get random song for shuffle =====
+  const getRandomSong = (excludeId) => {
+    const otherSongs = songs.filter((song) => song.id !== excludeId);
+    if (otherSongs.length === 0) return currentSong;
+    const randomIndex = Math.floor(Math.random() * otherSongs.length);
+    return otherSongs[randomIndex];
+  };
+
+  // ===== MODIFIED: Skip track handler with shuffle =====
+  const skipTrackHandler = (direction) => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-    const nextSong = songs[(currentIndex + 1) % songs.length];
-    setCurrentSong(nextSong);
+    let nextSong;
 
+    if (shuffle) {
+      // SHUFFLE MODE: Pick random song
+      nextSong = getRandomSong(currentSong.id);
+    } else {
+      // NORMAL MODE: Go to next/previous in order
+      if (direction === "skip-forward") {
+        nextSong = songs[(currentIndex + 1) % songs.length];
+      } else {
+        nextSong = songs[(currentIndex - 1 + songs.length) % songs.length];
+      }
+    }
+
+    setCurrentSong(nextSong);
+    updateActiveSongs(nextSong);
+  };
+
+  // ===== MODIFIED: Song end handler with repeat =====
+  const songEndHandler = () => {
+    // REPEAT ONE: Play same song again
+    if (repeat === "one") {
+      audioRef.current.currentTime = 0;
+      if (isPlaying) {
+        audioRef.current
+          .play()
+          .catch((err) => console.log("Playback error:", err));
+      }
+      return; // Don't change song
+    }
+
+    const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    let nextSong;
+
+    if (shuffle) {
+      // SHUFFLE MODE
+      nextSong = getRandomSong(currentSong.id);
+    } else {
+      // NORMAL MODE
+      if (repeat === "all") {
+        // REPEAT ALL: Loop to first after last
+        nextSong = songs[(currentIndex + 1) % songs.length];
+      } else {
+        // REPEAT OFF: Stop if last song
+        if (currentIndex === songs.length - 1) {
+          setIsPlaying(false);
+          return; // Stop playback
+        } else {
+          nextSong = songs[currentIndex + 1];
+        }
+      }
+    }
+
+    setCurrentSong(nextSong);
+    updateActiveSongs(nextSong);
+
+    // Auto-play next song
     if (isPlaying) {
       setTimeout(() => {
         if (audioRef.current) {
-          audioRef.current.play().catch((err) => {
-            console.warn("Autoplay blocked:", err);
-          });
+          audioRef.current
+            .play()
+            .catch((err) => console.log("Autoplay error:", err));
         }
-      }, 50); // 50ms is usually enough
+      }, 50);
+    }
+  };
+
+  // ===== NEW: Toggle shuffle =====
+  const toggleShuffle = () => {
+    setShuffle(!shuffle);
+    console.log("Shuffle:", !shuffle ? "ON" : "OFF");
+  };
+
+  // ===== NEW: Cycle through repeat modes =====
+  const cycleRepeat = () => {
+    if (repeat === "off") {
+      setRepeat("one");
+      console.log("Repeat: ONE");
+    } else if (repeat === "one") {
+      setRepeat("all");
+      console.log("Repeat: ALL");
+    } else {
+      setRepeat("off");
+      console.log("Repeat: OFF");
     }
   };
 
@@ -85,6 +175,12 @@ function App() {
         setCurrentSong={setCurrentSong}
         audioRef={audioRef}
         setSongs={setSongs}
+        // NEW PROPS:
+        shuffle={shuffle}
+        toggleShuffle={toggleShuffle}
+        repeat={repeat}
+        cycleRepeat={cycleRepeat}
+        skipTrackHandler={skipTrackHandler} // Pass the handler down
       />
 
       <Library
@@ -98,8 +194,8 @@ function App() {
       />
 
       <audio
-        onLoadedMetadata={timeUpateHandler}
-        onTimeUpdate={timeUpateHandler}
+        onLoadedMetadata={timeUpdateHandler}
+        onTimeUpdate={timeUpdateHandler}
         ref={audioRef}
         src={currentSong?.audio}
         onEnded={songEndHandler}
@@ -108,6 +204,4 @@ function App() {
   );
 }
 
-
 export default App;
-
