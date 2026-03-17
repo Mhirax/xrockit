@@ -1,14 +1,14 @@
 // src/styles/_player.scss
-// 🔧 REPLACE with this version that shifts controls UP
+// COMPLETE FILE - Copy everything below
 
 .player {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;  // Changed from center to flex-start
-    padding: 1rem 0 0 0;          // Reduced top padding
+    justify-content: flex-start;
+    padding: 1rem 0 0 0;
     width: 100%;
-    margin-top: -1rem;             // Pull everything up slightly
+    margin-top: -1rem;
 }
 
 // Progress bar section
@@ -16,7 +16,7 @@
     width: 50%;
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;           // Reduced from 2rem to 1rem
+    margin-bottom: 1rem;
     
     p {
         padding: 0 1rem;
@@ -41,6 +41,10 @@
             border-radius: 50%;
             cursor: pointer;
         }
+        
+        &:focus {
+            outline: none;
+        }
     }
 }
 
@@ -50,10 +54,10 @@
     justify-content: center;
     align-items: center;
     width: 40%;
-    margin-bottom: 0.75rem;        // Reduced from 2rem to 0.75rem
+    margin-bottom: 0.75rem;
     
     .skip-back {
-        margin-right: 15rem;
+        margin-right: 12rem;
         color: white;
         cursor: pointer;
         font-size: 2rem;
@@ -78,7 +82,7 @@
     }
     
     .skip-forward {
-        margin-left: 15rem;
+        margin-left: 12rem;
         color: white;
         cursor: pointer;
         font-size: 2rem;
@@ -91,17 +95,17 @@
     }
 }
 
-// MODE CONTROLS - Shuffle and Repeat (NOW VISIBLE!)
+// MODE CONTROLS - Shuffle, Lyrics, Repeat
 .mode-controls {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
-    margin-bottom: 0.5rem;         // Minimal margin
-    margin-top: 0;                 // No top margin
+    width: 40%;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
     
-    .shuffle {
-        margin-right: 12rem;         // Reduced from 6rem for better fit
+    // Common styles for all mode buttons
+    .shuffle, .lyrics, .repeat {
         color: white;
         cursor: pointer;
         opacity: 0.7;
@@ -115,29 +119,35 @@
         
         &.active {
             opacity: 1;
+        }
+    }
+    
+    // Individual styles
+    .shuffle {
+        margin-right: 5rem;
+        
+        &.active {
             color: #1db954;
         }
     }
     
-    .repeat {
-        margin-left: 12rem;          // Reduced from 6rem for better fit
-        color: white;
-        cursor: pointer;
-        opacity: 0.7;
-        font-size: 1.3rem;
-        transition: all 0.2s ease;
-        
-        &:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
+    .lyrics {
+        margin: 0 3rem;
+        margin-top: 2rem;
         
         &.active {
-            opacity: 1;
+            color: #9b59b6;  // Purple for lyrics
+        }
+    }
+    
+    .repeat {
+        margin-left:5rem;
+        
+        &.active {
             color: #1db954;
             
             &.one {
-                color: #9b59b6;
+                color: #9b59b6;  // Purple for repeat one
             }
         }
     }
@@ -149,15 +159,50 @@
     justify-content: center;
     gap: 1rem;
     min-height: 30px;
-    margin-top: 0.25rem;           // Small top margin
+    margin-top: 0.25rem;
     
     .badge {
         padding: 0.3rem 1.2rem;
-        background: rgba(29, 185, 84, 0.15);
         border-radius: 20px;
         font-size: 0.85rem;
-        color: #1db954;
-        border: 1px solid rgba(29, 185, 84, 0.3);
+        border: 1px solid;
+        animation: fadeIn 0.3s ease;
+        
+        &.shuffle-badge {
+            background: rgba(29, 185, 84, 0.15);
+            color: #1db954;
+            border-color: rgba(29, 185, 84, 0.3);
+        }
+        
+        &.lyrics-badge {
+            background: rgba(155, 89, 182, 0.15);
+            color: #9b59b6;
+            border-color: rgba(155, 89, 182, 0.3);
+        }
+        
+        &.repeat-one-badge {
+            background: rgba(155, 89, 182, 0.15);
+            color: #9b59b6;
+            border-color: rgba(155, 89, 182, 0.3);
+        }
+        
+        &.repeat-all-badge {
+            background: rgba(29, 185, 84, 0.15);
+            color: #1db954;
+            border-color: rgba(29, 185, 84, 0.3);
+        }
+    }
+}
+
+// Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -188,16 +233,51 @@
     }
     
     .mode-controls {
-        width: 60%;
+        width: 80%;
         
-        .shuffle {
-            margin-right: 2rem;
+        .shuffle, .lyrics, .repeat {
             font-size: 1.1rem;
         }
         
+        .shuffle {
+            margin-right: 1.5rem;
+        }
+        
+        .lyrics {
+            margin: 0 1.5rem;
+        }
+        
         .repeat {
-            margin-left: 2rem;
-            font-size: 1.1rem;
+            margin-left: 1.5rem;
+        }
+    }
+    
+    .status-indicators {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        
+        .badge {
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+        }
+    }
+}
+
+// Small mobile devices
+@media screen and (max-width: 480px) {
+    .mode-controls {
+        width: 90%;
+        
+        .shuffle {
+            margin-right: 1rem;
+        }
+        
+        .lyrics {
+            margin: 0 1rem;
+        }
+        
+        .repeat {
+            margin-left: 1rem;
         }
     }
 }

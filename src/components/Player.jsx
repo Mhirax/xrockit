@@ -1,5 +1,5 @@
 // src/components/Player.js
-// 🔧 MODIFY THIS FILE - Add shuffle and repeat buttons
+// 🔧 MODIFY THIS FILE - Add lyrics button between shuffle and repeat
 
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,9 +8,10 @@ import {
   faAngleLeft,
   faAngleRight,
   faPause,
-  faRandom, // NEW: Import shuffle icon
-  faRepeat, // NEW: Import repeat icon
-  faRedoAlt, // NEW: Import repeat-one icon
+  faRandom,
+  faRepeat,
+  faRedoAlt,
+  faFileAlt, // NEW: Import lyrics icon
 } from "@fortawesome/free-solid-svg-icons";
 
 const Player = ({
@@ -23,14 +24,15 @@ const Player = ({
   songs,
   setSongs,
   setCurrentSong,
-  // NEW PROPS:
   shuffle,
   toggleShuffle,
   repeat,
   cycleRepeat,
-  skipTrackHandler, // Now coming from App.js
+  skipTrackHandler,
+  // NEW props
+  showLyrics,
+  toggleLyrics,
 }) => {
-  // ===== EXISTING activeLibraryHandler (keep as is) =====
   const activeLibraryHandler = (nextSong) => {
     const newSongs = songs.map((song) => {
       if (song.id === nextSong.id) {
@@ -46,22 +48,18 @@ const Player = ({
       }
     });
     setSongs(newSongs);
-    console.log("Activated song:", nextSong.name);
   };
 
-  // ===== EXISTING playSongHandler (keep as is) =====
   const playSongHandler = () => {
     setIsPlaying(!isPlaying);
   };
 
-  // ===== EXISTING getTime (keep as is) =====
   const getTime = (time) => {
     return (
       Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
     );
   };
 
-  // ===== EXISTING dragHandler (keep as is) =====
   const dragHandler = (e) => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -70,21 +68,16 @@ const Player = ({
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  // ===== NEW: Get the correct repeat icon =====
   const getRepeatIcon = () => {
-    if (repeat === "one") return faRedoAlt; // Repeat one
-    return faRepeat; // Repeat all
+    if (repeat === "one") return faRedoAlt;
+    return faRepeat;
   };
 
-  // ===== NEW: Get the correct repeat class =====
   const getRepeatClass = () => {
     if (repeat === "one") return "repeat one active";
     if (repeat === "all") return "repeat all active";
     return "repeat";
   };
-
-  // src/components/Player.js
-  // Make sure your JSX matches this structure
 
   return (
     <div className="player">
@@ -101,7 +94,7 @@ const Player = ({
         <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
       </div>
 
-      {/* MAIN CONTROLS - Skip and Play (Top row) */}
+      {/* MAIN CONTROLS */}
       <div className="main-controls">
         <FontAwesomeIcon
           onClick={() => skipTrackHandler("skip-back")}
@@ -123,28 +116,43 @@ const Player = ({
         />
       </div>
 
-      {/* MODE CONTROLS - Shuffle and Repeat (Bottom row) */}
+      {/* MODE CONTROLS - NOW WITH 3 BUTTONS */}
       <div className="mode-controls">
+        {/* Shuffle */}
         <FontAwesomeIcon
           onClick={toggleShuffle}
           className={`shuffle ${shuffle ? "active" : ""}`}
           icon={faRandom}
         />
+
+        {/* LYRICS - NEW button in the middle */}
+        <FontAwesomeIcon
+          onClick={toggleLyrics}
+          className={`lyrics ${showLyrics ? "active" : ""}`}
+          icon={faFileAlt}
+        />
+
+        {/* Repeat */}
         <FontAwesomeIcon
           onClick={cycleRepeat}
-          className={`repeat ${repeat !== "off" ? "active" : ""} ${repeat === "one" ? "one" : ""}`}
-          icon={repeat === "one" ? faRedoAlt : faRepeat}
+          className={getRepeatClass()}
+          icon={getRepeatIcon()}
         />
       </div>
 
-      {/* STATUS INDICATORS */}
+      {/* STATUS INDICATORS - Updated with lyrics */}
       <div className="status-indicators">
-        {shuffle && <span className="badge">🔀 Shuffle On</span>}
-        {repeat === "one" && <span className="badge">🔂 Repeat One</span>}
-        {repeat === "all" && <span className="badge">🔁 Repeat All</span>}
+        {shuffle && <span className="badge shuffle-badge">🔀 Shuffle</span>}
+        {showLyrics && <span className="badge lyrics-badge">📄 Lyrics</span>}
+        {repeat === "one" && (
+          <span className="badge repeat-one-badge">🔂 One</span>
+        )}
+        {repeat === "all" && (
+          <span className="badge repeat-all-badge">🔁 All</span>
+        )}
       </div>
     </div>
   );
-};;
+};
 
 export default Player;

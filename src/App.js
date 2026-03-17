@@ -1,18 +1,16 @@
-// src/App.js
-// 🔧 MODIFY THIS FILE - Add the new state and functions
-
 import React, { useRef, useState, useEffect } from "react";
 import "./styles/app.scss";
 import Nav from "./components/Nav";
 import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
+import LyricsPopup from "./components/LyricsPopup";
 import data from "./data";
 
 function App() {
   const audioRef = useRef(null);
 
-  // ===== EXISTING STATE (keep all of this) =====
+  // ===== STATE DECLARATIONS =====
   const [songs, setSongs] = useState(data());
   const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -22,19 +20,20 @@ function App() {
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
 
-  // ===== NEW STATE FOR SHUFFLE & REPEAT =====
-  const [shuffle, setShuffle] = useState(false); // true or false
-  const [repeat, setRepeat] = useState("off"); // 'off', 'one', 'all'
+  // Additional state
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState("off");
+  const [showLyrics, setShowLyrics] = useState(false);
 
-  // ===== EXISTING useEffect (keep as is) =====
+  // ===== EFFECTS =====
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     if (isPlaying) {
-      const playpromise = audio.play();
-      if (playpromise !== undefined) {
-        playpromise.catch((err) => {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
           console.log("Autoplay blocked:", err);
           setIsPlaying(false);
         });
@@ -42,16 +41,15 @@ function App() {
     } else {
       audio.pause();
     }
-  }, [currentSong, isPlaying]);
+  }, [currentSong, isPlaying, audioRef]);
 
-  // ===== EXISTING timeUpdateHandler (keep as is) =====
+  // ===== HELPER FUNCTIONS =====
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
     setSongInfo({ ...songInfo, currentTime: current, duration: duration });
   };
 
-  // ===== NEW: Helper function to update active songs =====
   const updateActiveSongs = (selectedSong) => {
     const newSongs = songs.map((song) => ({
       ...song,
@@ -60,7 +58,6 @@ function App() {
     setSongs(newSongs);
   };
 
-  // ===== NEW: Get random song for shuffle =====
   const getRandomSong = (excludeId) => {
     const otherSongs = songs.filter((song) => song.id !== excludeId);
     if (otherSongs.length === 0) return currentSong;
@@ -68,16 +65,14 @@ function App() {
     return otherSongs[randomIndex];
   };
 
-  // ===== MODIFIED: Skip track handler with shuffle =====
+  // ===== SKIP TRACK HANDLER =====
   const skipTrackHandler = (direction) => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     let nextSong;
 
     if (shuffle) {
-      // SHUFFLE MODE: Pick random song
       nextSong = getRandomSong(currentSong.id);
     } else {
-      // NORMAL MODE: Go to next/previous in order
       if (direction === "skip-forward") {
         nextSong = songs[(currentIndex + 1) % songs.length];
       } else {
@@ -89,9 +84,8 @@ function App() {
     updateActiveSongs(nextSong);
   };
 
-  // ===== MODIFIED: Song end handler with repeat =====
+  // ===== SONG END HANDLER =====
   const songEndHandler = () => {
-    // REPEAT ONE: Play same song again
     if (repeat === "one") {
       audioRef.current.currentTime = 0;
       if (isPlaying) {
@@ -99,25 +93,21 @@ function App() {
           .play()
           .catch((err) => console.log("Playback error:", err));
       }
-      return; // Don't change song
+      return;
     }
 
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     let nextSong;
 
     if (shuffle) {
-      // SHUFFLE MODE
       nextSong = getRandomSong(currentSong.id);
     } else {
-      // NORMAL MODE
       if (repeat === "all") {
-        // REPEAT ALL: Loop to first after last
         nextSong = songs[(currentIndex + 1) % songs.length];
       } else {
-        // REPEAT OFF: Stop if last song
         if (currentIndex === songs.length - 1) {
           setIsPlaying(false);
-          return; // Stop playback
+          return;
         } else {
           nextSong = songs[currentIndex + 1];
         }
@@ -127,7 +117,6 @@ function App() {
     setCurrentSong(nextSong);
     updateActiveSongs(nextSong);
 
-    // Auto-play next song
     if (isPlaying) {
       setTimeout(() => {
         if (audioRef.current) {
@@ -139,13 +128,12 @@ function App() {
     }
   };
 
-  // ===== NEW: Toggle shuffle =====
+  // ===== TOGGLE FUNCTIONS - THESE WERE MISSING! =====
   const toggleShuffle = () => {
     setShuffle(!shuffle);
     console.log("Shuffle:", !shuffle ? "ON" : "OFF");
   };
 
-  // ===== NEW: Cycle through repeat modes =====
   const cycleRepeat = () => {
     if (repeat === "off") {
       setRepeat("one");
@@ -159,6 +147,12 @@ function App() {
     }
   };
 
+  const toggleLyrics = () => {
+    setShowLyrics(!showLyrics);
+    console.log("Lyrics:", !showLyrics ? "OPEN" : "CLOSED");
+  };
+
+  // ===== RENDER =====
   return (
     <div className={`App ${libraryStatus ? "library-active" : ""}`}>
       <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
@@ -175,12 +169,13 @@ function App() {
         setCurrentSong={setCurrentSong}
         audioRef={audioRef}
         setSongs={setSongs}
-        // NEW PROPS:
         shuffle={shuffle}
-        toggleShuffle={toggleShuffle}
+        toggleShuffle={toggleShuffle} // ✅ NOW DEFINED!
         repeat={repeat}
-        cycleRepeat={cycleRepeat}
-        skipTrackHandler={skipTrackHandler} // Pass the handler down
+        cycleRepeat={cycleRepeat} // ✅ NOW DEFINED!
+        skipTrackHandler={skipTrackHandler}
+        showLyrics={showLyrics}
+        toggleLyrics={toggleLyrics} // ✅ NOW DEFINED!
       />
 
       <Library
@@ -191,6 +186,12 @@ function App() {
         isPlaying={isPlaying}
         setSongs={setSongs}
         libraryStatus={libraryStatus}
+      />
+
+      <LyricsPopup
+        song={currentSong}
+        show={showLyrics}
+        onClose={() => setShowLyrics(false)}
       />
 
       <audio

@@ -19,6 +19,34 @@ function chillhop() {
         audio: RX,
         id: uuidv4(),
         active: false,
+        lyrics: `[Verse 1]
+In the jungle, waiting for the sun
+The adventure has begun
+Mandy leading through the trees
+Feel the rhythm in the breeze
+
+[Chorus]
+Mandy and the jungle, hand in hand
+Running wild across the land
+Every step a new surprise
+Magic shining in their eyes
+
+[Verse 2]
+Through the vines and canopy
+Spirits wild and free
+Echoes of a distant drum
+Calling out to overcome
+
+[Chorus]
+Mandy and the jungle, hand in hand
+Running wild across the land
+Every step a new surprise
+Magic shining in their eyes
+
+[Outro]
+Oh-oh-oh, Mandy
+Oh-oh-oh, the jungle
+Mandy and the jungle forever`,
       },
       {
         name: "BMF",
