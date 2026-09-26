@@ -11,7 +11,7 @@ function App() {
   const audioRef = useRef(null);
 
   // ===== STATE DECLARATIONS =====
-  const [songs, setSongs] = useState(data());
+  const [songs, setSongs] = useState(data);
   const [currentSong, setCurrentSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo, setSongInfo] = useState({
@@ -34,6 +34,8 @@ function App() {
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
+          // AbortError just means a newer load/skip interrupted this play()
+          if (err.name === "AbortError") return;
           console.log("Autoplay blocked:", err);
           setIsPlaying(false);
         });
@@ -46,8 +48,9 @@ function App() {
   // ===== HELPER FUNCTIONS =====
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
-    const duration = e.target.duration;
-    setSongInfo({ ...songInfo, currentTime: current, duration: duration });
+    // duration is NaN until metadata loads
+    const duration = e.target.duration || 0;
+    setSongInfo((prev) => ({ ...prev, currentTime: current, duration }));
   };
 
   const updateActiveSongs = (selectedSong) => {
@@ -66,6 +69,12 @@ function App() {
   };
 
   // ===== SKIP TRACK HANDLER =====
+  // Shared by the library list: switch song and mark it active
+  const selectSongHandler = (selectedSong) => {
+    setCurrentSong(selectedSong);
+    updateActiveSongs(selectedSong);
+  };
+
   const skipTrackHandler = (direction) => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     let nextSong;
@@ -80,19 +89,19 @@ function App() {
       }
     }
 
-    setCurrentSong(nextSong);
-    updateActiveSongs(nextSong);
+    selectSongHandler(nextSong);
   };
 
   // ===== SONG END HANDLER =====
   const songEndHandler = () => {
+    const audio = audioRef.current;
+    const replay = () => {
+      audio.currentTime = 0;
+      audio.play().catch((err) => console.log("Playback error:", err));
+    };
+
     if (repeat === "one") {
-      audioRef.current.currentTime = 0;
-      if (isPlaying) {
-        audioRef.current
-          .play()
-          .catch((err) => console.log("Playback error:", err));
-      }
+      replay();
       return;
     }
 
@@ -101,55 +110,42 @@ function App() {
 
     if (shuffle) {
       nextSong = getRandomSong(currentSong.id);
+    } else if (repeat === "all") {
+      nextSong = songs[(currentIndex + 1) % songs.length];
+    } else if (currentIndex === songs.length - 1) {
+      setIsPlaying(false);
+      return;
     } else {
-      if (repeat === "all") {
-        nextSong = songs[(currentIndex + 1) % songs.length];
-      } else {
-        if (currentIndex === songs.length - 1) {
-          setIsPlaying(false);
-          return;
-        } else {
-          nextSong = songs[currentIndex + 1];
-        }
-      }
+      nextSong = songs[currentIndex + 1];
     }
 
-    setCurrentSong(nextSong);
-    updateActiveSongs(nextSong);
-
-    if (isPlaying) {
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current
-            .play()
-            .catch((err) => console.log("Autoplay error:", err));
-        }
-      }, 50);
+    // Same song again (single-song library): src won't change, so restart by hand
+    if (nextSong.id === currentSong.id) {
+      replay();
+      return;
     }
+
+    // The effect above starts playback once the new song is loaded
+    selectSongHandler(nextSong);
   };
 
-  // ===== TOGGLE FUNCTIONS - THESE WERE MISSING! =====
+  // ===== TOGGLE FUNCTIONS =====
   const toggleShuffle = () => {
     setShuffle(!shuffle);
-    console.log("Shuffle:", !shuffle ? "ON" : "OFF");
   };
 
   const cycleRepeat = () => {
     if (repeat === "off") {
       setRepeat("one");
-      console.log("Repeat: ONE");
     } else if (repeat === "one") {
       setRepeat("all");
-      console.log("Repeat: ALL");
     } else {
       setRepeat("off");
-      console.log("Repeat: OFF");
     }
   };
 
   const toggleLyrics = () => {
     setShowLyrics(!showLyrics);
-    console.log("Lyrics:", !showLyrics ? "OPEN" : "CLOSED");
   };
 
   // ===== RENDER =====
@@ -165,26 +161,19 @@ function App() {
         currentSong={currentSong}
         setSongInfo={setSongInfo}
         songInfo={songInfo}
-        songs={songs}
-        setCurrentSong={setCurrentSong}
         audioRef={audioRef}
-        setSongs={setSongs}
         shuffle={shuffle}
-        toggleShuffle={toggleShuffle} // ✅ NOW DEFINED!
+        toggleShuffle={toggleShuffle}
         repeat={repeat}
-        cycleRepeat={cycleRepeat} // ✅ NOW DEFINED!
+        cycleRepeat={cycleRepeat}
         skipTrackHandler={skipTrackHandler}
         showLyrics={showLyrics}
-        toggleLyrics={toggleLyrics} // ✅ NOW DEFINED!
+        toggleLyrics={toggleLyrics}
       />
 
       <Library
-        audioRef={audioRef}
         songs={songs}
-        setCurrentSong={setCurrentSong}
-        Song={Song}
-        isPlaying={isPlaying}
-        setSongs={setSongs}
+        selectSongHandler={selectSongHandler}
         libraryStatus={libraryStatus}
       />
 

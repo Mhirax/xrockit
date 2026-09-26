@@ -1,6 +1,3 @@
-// src/components/Player.js
-// 🔧 MODIFY THIS FILE - Add lyrics button between shuffle and repeat
-
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,7 +8,7 @@ import {
   faRandom,
   faRepeat,
   faRedoAlt,
-  faFileAlt, // NEW: Import lyrics icon
+  faFileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Player = ({
@@ -21,35 +18,14 @@ const Player = ({
   setIsPlaying,
   setSongInfo,
   songInfo,
-  songs,
-  setSongs,
-  setCurrentSong,
   shuffle,
   toggleShuffle,
   repeat,
   cycleRepeat,
   skipTrackHandler,
-  // NEW props
   showLyrics,
   toggleLyrics,
 }) => {
-  const activeLibraryHandler = (nextSong) => {
-    const newSongs = songs.map((song) => {
-      if (song.id === nextSong.id) {
-        return {
-          ...song,
-          active: true,
-        };
-      } else {
-        return {
-          ...song,
-          active: false,
-        };
-      }
-    });
-    setSongs(newSongs);
-  };
-
   const playSongHandler = () => {
     setIsPlaying(!isPlaying);
   };
@@ -64,8 +40,9 @@ const Player = ({
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.currentTime = e.target.value;
-    setSongInfo({ ...songInfo, currentTime: e.target.value });
+    const time = Number(e.target.value);
+    audio.currentTime = time;
+    setSongInfo({ ...songInfo, currentTime: time });
   };
 
   const getRepeatIcon = () => {
@@ -116,7 +93,7 @@ const Player = ({
         />
       </div>
 
-      {/* MODE CONTROLS - NOW WITH 3 BUTTONS */}
+      {/* MODE CONTROLS */}
       <div className="mode-controls">
         {/* Shuffle */}
         <FontAwesomeIcon
@@ -125,7 +102,7 @@ const Player = ({
           icon={faRandom}
         />
 
-        {/* LYRICS - NEW button in the middle */}
+        {/* Lyrics */}
         <FontAwesomeIcon
           onClick={toggleLyrics}
           className={`lyrics ${showLyrics ? "active" : ""}`}
@@ -140,7 +117,7 @@ const Player = ({
         />
       </div>
 
-      {/* STATUS INDICATORS - Updated with lyrics */}
+      {/* STATUS INDICATORS */}
       <div className="status-indicators">
         {shuffle && <span className="badge shuffle-badge">🔀 Shuffle</span>}
         {showLyrics && <span className="badge lyrics-badge">📄 Lyrics</span>}
